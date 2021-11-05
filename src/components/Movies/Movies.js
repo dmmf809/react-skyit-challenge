@@ -6,21 +6,24 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
 import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
+import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { Chip } from 'primereact/chip';
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState([]);
-  const [filter] = useState({
+  const [filter, setFilter] = useState({
     title: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    releaseDate: { value: null, matchMode: FilterMatchMode.EQUALS },
-    length: { value: null, matchMode: FilterMatchMode.EQUALS },
+    releaseDate: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    length: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     director: { value: null, matchMode: FilterMatchMode.IN },
     certification: { value: null, matchMode: FilterMatchMode.EQUALS },
-    rating: { value: null, matchMode: FilterMatchMode.EQUALS },
+    rating: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
+  const [rate, setRate] = useState('');
+
+  //Dialog positioning
   const [displayPosition, setDisplayPosition] = useState(false);
   const [position, setPosition] = useState('center');
 
@@ -54,6 +57,10 @@ const Movies = () => {
   const onHide = (name) => {
     dialogFuncMap[`${name}`](false);
     setSelectedMovie([]);
+  };
+
+  const renderFooter = () => {
+    return <div>All movie data are from Wikipedia and IMDb.</div>;
   };
 
   //Director Filter
@@ -121,20 +128,29 @@ const Movies = () => {
   };
 
   //Rating template
-  const formatRate = (value) => {
-    let rate = (value / 5) * 100;
-    return rate.toFixed(2).toString() + '%';
+  const handleRate = (e) => {
+    const value = e.target.value;
+    let _filter = { ...filter };
+    _filter['rating'].value = value;
+
+    setFilter(_filter);
+    setRate(value);
   };
 
   const ratingBodyTemplate = (rowData) => {
     return formatRate(rowData.rating);
   };
 
-  const ratingFilterTemplate = (options) => {
+  const formatRate = (value) => {
+    let rate = (value / 5) * 100;
+    return rate.toFixed(2) + '%';
+  };
+
+  const ratingFilterTemplate = () => {
     return (
-      <InputNumber
-        value={options.value}
-        onChange={(e) => options.filterApplyCallback(e.value, options.index)}
+      <InputText
+        value={rate}
+        onChange={handleRate}
         placeholder='Select Rating'
       />
     );
@@ -153,7 +169,7 @@ const Movies = () => {
         filterDisplay='row'
         filters={filter}
         emptyMessage='No Movies Found'
-        responsiveLayout='scroll'
+        //responsiveLayout='scroll'
       >
         <Column selectionMode='single' headerStyle={{ width: '3em' }}></Column>
         <Column
@@ -201,6 +217,7 @@ const Movies = () => {
           header='Rating'
           filterField='rating'
           filter
+          dataType='numeric'
           body={ratingBodyTemplate}
           filterElement={ratingFilterTemplate}
           showFilterMenu={false}
@@ -213,6 +230,7 @@ const Movies = () => {
         modal
         style={{ width: '35vw' }}
         onHide={() => onHide('displayPosition')}
+        footer={renderFooter()}
         draggable={false}
         resizable={false}
       >
@@ -238,9 +256,6 @@ const Movies = () => {
           <p className='plot-title'>Plot: </p>
           <p className='plot'>{`${selectedMovie.plot}`}</p>
         </div>
-        <p className='p-d-flex p-jc-end footer'>
-          All movie data are from Wikipedia and IMDb.
-        </p>
       </Dialog>
     </div>
   );
