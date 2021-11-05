@@ -1,0 +1,23 @@
+.certification-badge {
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+.certification-badge.status-General {
+  background-color: #c8e6c9;
+  color: #256029;
+}
+
+.certification-badge.status-CA-PG {
+  background-color: #feedaf;
+  color: #805b36;
+}
+
+.certification-badge.status-14 {
+  background-color: #ffcdd2;
+  color: #c63737;
+}
