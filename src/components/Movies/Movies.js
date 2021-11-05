@@ -13,7 +13,7 @@ import { Chip } from 'primereact/chip';
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState([]);
-  const [filter, setFiltered] = useState({
+  const [filter] = useState({
     title: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     releaseDate: { value: null, matchMode: FilterMatchMode.EQUALS },
     length: { value: null, matchMode: FilterMatchMode.EQUALS },
@@ -38,6 +38,7 @@ const Movies = () => {
 
   const handleSelect = (e) => setSelectedMovie(e.value);
 
+  //Dialog
   const dialogFuncMap = {
     displayPosition: setDisplayPosition,
   };
@@ -55,6 +56,7 @@ const Movies = () => {
     setSelectedMovie([]);
   };
 
+  //Director Filter
   const directors = [
     'John Carney',
     'Patty Jenkins',
@@ -67,11 +69,7 @@ const Movies = () => {
     'Luc Besson',
   ];
 
-  const certifications = ['General', '14 Accompaniment', 'CA-PG'];
-
-  //Director Filter
   const directorItemTemplate = (option) => {
-    console.log(option);
     return (
       <div className='p-multiselect-director-option'>
         <span>{option}</span>
@@ -85,7 +83,6 @@ const Movies = () => {
         value={options.value}
         options={directors}
         onChange={(e) => options.filterApplyCallback(e.value)}
-        optionLabel='director'
         itemTemplate={directorItemTemplate}
         placeholder='All'
         maxSelectedLabels={3}
@@ -94,6 +91,8 @@ const Movies = () => {
   };
 
   //Certification Filter
+  const certifications = ['General', '14 Accompaniment', 'CA-PG'];
+
   const certBodyTemplate = (rowData) => {
     return (
       <span className={`certification-badge status-${rowData.certification}`}>
@@ -116,7 +115,6 @@ const Movies = () => {
         onChange={(e) => options.filterApplyCallback(e.value)}
         itemTemplate={certItemTemplate}
         placeholder='Select a Status'
-        className='p-column-filter'
         showClear
       />
     );
@@ -125,7 +123,7 @@ const Movies = () => {
   //Rating template
   const formatRate = (value) => {
     let rate = (value / 5) * 100;
-    return rate.toFixed(2) + '%';
+    return rate.toFixed(2).toString() + '%';
   };
 
   const ratingBodyTemplate = (rowData) => {
@@ -223,20 +221,20 @@ const Movies = () => {
           <h4 className='p-d-flex p-jc-center'>
             Directed by {`${selectedMovie.director}`}
           </h4>
-          <p className='label'>
+          <div className='label'>
             Cast:{' '}
             {selectedMovie.cast &&
-              selectedMovie.cast.map((val) => {
-                return <Chip label={val} className='cast-genre' />;
+              selectedMovie.cast.map((val, i) => {
+                return <Chip key={i} label={val} className='cast-genre' />;
               })}
-          </p>
-          <p className='label'>
+          </div>
+          <div className='label'>
             Genre:{' '}
             {selectedMovie.genre &&
-              selectedMovie.genre.map((val) => {
-                return <Chip label={val} className='cast-genre' />;
+              selectedMovie.genre.map((val, i) => {
+                return <Chip key={i} label={val} className='cast-genre' />;
               })}
-          </p>
+          </div>
           <p className='plot-title'>Plot: </p>
           <p className='plot'>{`${selectedMovie.plot}`}</p>
         </div>
