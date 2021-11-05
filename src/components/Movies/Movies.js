@@ -13,6 +13,7 @@ import { Chip } from 'primereact/chip';
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState([]);
+  //Filtering for each text field
   const [filter, setFilter] = useState({
     title: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     releaseDate: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -39,6 +40,7 @@ const Movies = () => {
     fetchMovies();
   }, []);
 
+  //Sets selectedMovie
   const handleSelect = (e) => setSelectedMovie(e.value);
 
   //Dialog
@@ -63,7 +65,7 @@ const Movies = () => {
     return <div>All movie data are from Wikipedia and IMDb.</div>;
   };
 
-  //Director Filter
+  //Director Filter & Template
   const directors = [
     'John Carney',
     'Patty Jenkins',
@@ -97,7 +99,7 @@ const Movies = () => {
     );
   };
 
-  //Certification Filter
+  //Certification Filter & Template
   const certifications = ['General', '14 Accompaniment', 'CA-PG'];
 
   const certBodyTemplate = (rowData) => {
@@ -127,7 +129,7 @@ const Movies = () => {
     );
   };
 
-  //Rating template
+  //Rating Filter & Template
   const handleRate = (e) => {
     const value = e.target.value;
     let _filter = { ...filter };
@@ -169,7 +171,7 @@ const Movies = () => {
         filterDisplay='row'
         filters={filter}
         emptyMessage='No Movies Found'
-        //responsiveLayout='scroll'
+        responsiveLayout='scroll'
       >
         <Column selectionMode='single' headerStyle={{ width: '3em' }}></Column>
         <Column
