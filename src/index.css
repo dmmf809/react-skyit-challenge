@@ -1,3 +1,35 @@
+body {
+  background-color: #e6e6e9;
+  font-family: 'Lora', serif;
+}
+
+h1 {
+  color: #636366;
+  margin-top: 2rem;
+  font-family: 'Libre Baskerville', serif;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin: 0%;
+  font-family: 'Libre Baskerville', serif;
+}
+
+h4 {
+  margin: 0%;
+  margin-bottom: 3%;
+}
+
+.card {
+  width: 100%;
+  padding: 0 30px;
+}
+
+.p-multiselect-director-option {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .certification-badge {
   border-radius: 2px;
   padding: 0.25em 0.5rem;
@@ -20,4 +52,37 @@
 .certification-badge.status-14 {
   background-color: #ffcdd2;
   color: #c63737;
+}
+
+.movie-details {
+  background-color: #88a2aa;
+  color: #636366;
+  padding: 10px;
+}
+
+.cast-genre {
+  font-family: 'Libre Baskerville', serif;
+  margin-right: 1%;
+  margin-bottom: 1%;
+  font-size: 0.8rem;
+}
+
+.plot-title {
+  font-size: 1rem;
+  font-family: 'Libre Baskerville', serif;
+  margin: 9px 0;
+}
+
+.label {
+  font-family: 'Libre Baskerville', serif;
+  margin: 0%;
+}
+
+.plot {
+  margin: 0%;
+  font-size: 0.9rem;
+}
+
+.footer {
+  line-height: 0%;
 }

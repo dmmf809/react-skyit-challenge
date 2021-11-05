@@ -7,6 +7,8 @@ import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
+import { Dialog } from 'primereact/dialog';
+import { Chip } from 'primereact/chip';
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -19,6 +21,8 @@ const Movies = () => {
     certification: { value: null, matchMode: FilterMatchMode.EQUALS },
     rating: { value: null, matchMode: FilterMatchMode.EQUALS },
   });
+  const [displayPosition, setDisplayPosition] = useState(false);
+  const [position, setPosition] = useState('center');
 
   //Fetch movie data
   const fetchMovies = async () => {
@@ -32,13 +36,49 @@ const Movies = () => {
     fetchMovies();
   }, []);
 
-  const directors = movies.map((val) => {
-    return `${val.director}`;
-  });
+  const handleSelect = (e) => setSelectedMovie(e.value);
+
+  const dialogFuncMap = {
+    displayPosition: setDisplayPosition,
+  };
+
+  const onClick = (name, position) => {
+    dialogFuncMap[`${name}`](true);
+
+    if (position) {
+      setPosition(position);
+    }
+  };
+
+  const onHide = (name) => {
+    dialogFuncMap[`${name}`](false);
+    setSelectedMovie([]);
+  };
+
+  const directors = [
+    'John Carney',
+    'Patty Jenkins',
+    'Travis Fine',
+    'Amy Poehler',
+    'David Ayer',
+    'Zack Snyder',
+    'Pete Docter',
+    'Ryan Coogler',
+    'Luc Besson',
+  ];
 
   const certifications = ['General', '14 Accompaniment', 'CA-PG'];
 
   //Director Filter
+  const directorItemTemplate = (option) => {
+    console.log(option);
+    return (
+      <div className='p-multiselect-director-option'>
+        <span>{option}</span>
+      </div>
+    );
+  };
+
   const directorFilterTemplate = (options) => {
     return (
       <MultiSelect
@@ -46,7 +86,7 @@ const Movies = () => {
         options={directors}
         onChange={(e) => options.filterApplyCallback(e.value)}
         optionLabel='director'
-        //className='p-column-filter'
+        itemTemplate={directorItemTemplate}
         placeholder='All'
         maxSelectedLabels={3}
       />
@@ -103,11 +143,13 @@ const Movies = () => {
   };
 
   return (
-    <>
+    <div className='card'>
+      <h1 className='p-d-flex p-jc-center'>Favorite Movie List</h1>
       <DataTable
         value={movies}
         selection={selectedMovie}
-        onSelectionChange={(e) => setSelectedMovie(e.value)}
+        onRowClick={() => onClick('displayPosition', 'right')}
+        onSelectionChange={(e) => handleSelect(e)}
         paginator
         rows={10}
         filterDisplay='row'
@@ -158,7 +200,6 @@ const Movies = () => {
           style={{ minWidth: '14rem' }}
         ></Column>
         <Column
-          //field='rating'
           header='Rating'
           filterField='rating'
           filter
@@ -167,7 +208,43 @@ const Movies = () => {
           showFilterMenu={false}
         ></Column>
       </DataTable>
-    </>
+      <Dialog
+        header='MOVIE DETAILS'
+        visible={displayPosition}
+        position={position}
+        modal
+        style={{ width: '35vw' }}
+        onHide={() => onHide('displayPosition')}
+        draggable={false}
+        resizable={false}
+      >
+        <div className='movie-details'>
+          <h3 className='p-d-flex p-jc-center'>{`${selectedMovie.title}`}</h3>
+          <h4 className='p-d-flex p-jc-center'>
+            Directed by {`${selectedMovie.director}`}
+          </h4>
+          <p className='label'>
+            Cast:{' '}
+            {selectedMovie.cast &&
+              selectedMovie.cast.map((val) => {
+                return <Chip label={val} className='cast-genre' />;
+              })}
+          </p>
+          <p className='label'>
+            Genre:{' '}
+            {selectedMovie.genre &&
+              selectedMovie.genre.map((val) => {
+                return <Chip label={val} className='cast-genre' />;
+              })}
+          </p>
+          <p className='plot-title'>Plot: </p>
+          <p className='plot'>{`${selectedMovie.plot}`}</p>
+        </div>
+        <p className='p-d-flex p-jc-end footer'>
+          All movie data are from Wikipedia and IMDb.
+        </p>
+      </Dialog>
+    </div>
   );
 };
 
